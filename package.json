@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "firebase": "^9.22.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2"
@@ -32,5 +33,13 @@
   "main": "postcss.config.js",
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liquedgit/tpa-desktop-code.git"
+  },
+  "bugs": {
+    "url": "https://github.com/liquedgit/tpa-desktop-code/issues"
+  },
+  "homepage": "https://github.com/liquedgit/tpa-desktop-code#readme",
   "description": ""
 }
