@@ -1,27 +1,28 @@
-import { useEffect } from "react"
-import {auth} from '../utils/Firebase'
-import { onAuthStateChanged } from "firebase/auth"
-import { useNavigate } from "react-router-dom"
+import { auth } from "../utils/Firebase"
+import { useState } from "react"
 import { UserData } from "../Type"
-import { checkDatafromFirestore, checkValidity } from "../utils/FirestoreUser"
+import { onAuthStateChanged } from "firebase/auth"
+import { checkDatafromFirestore } from "../utils/FirestoreUser"
+import HeaderComponent from "../components/HeaderComponent"
+
 
 export default function HomeView(){
+    const [user, setUser] = useState<UserData | null>(null)
 
-    const navigate = useNavigate()
-
-    useEffect(()=>{
-        onAuthStateChanged(auth, (user)=>{
-            let userData : UserData|null = checkValidity(user);
-            if(checkValidity(user)){
-                if(userData.enabled)
-            }
-            
-        })
+    onAuthStateChanged(auth, (userCreds)=>{
+        if(userCreds){
+            checkDatafromFirestore(userCreds?.uid).then((cred)=>{
+                setUser(cred)
+            })
+        }
+        
     })
+
+    
 
     return(
         <>
-            <h1>Hello world</h1>
+            <HeaderComponent user={user}/>
         </>
     )
 }

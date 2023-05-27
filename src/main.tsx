@@ -11,6 +11,7 @@ import HomeView from './Views/HomeView.tsx'
 
 
 
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
   },
   {
     path:"/home",
-    element:<HomeView/>
+    element: <HomeView/>
   }
 ]);
 

@@ -7,7 +7,7 @@ import { pushnewDatatoFirestore } from '../utils/FirestoreUser';
 
 
 export default function RegisterView(){
-
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confPassword, setConfPassword] = useState("");
@@ -21,7 +21,7 @@ export default function RegisterView(){
         e.preventDefault();
         if(email.length != 0 && password === confPassword){
             createUserWithEmailAndPassword(auth, email,password).then((userCreds)=>{
-                pushnewDatatoFirestore(userCreds.user.uid, true,role).then(()=>{
+                pushnewDatatoFirestore(userCreds.user.uid, true,role, name).then(()=>{
                     navigate('/');
                 })
             }).catch((error)=>{
@@ -47,6 +47,9 @@ export default function RegisterView(){
                             <h1 className="font-bold text-2xl">Register</h1>
                         </div>
                         <form onSubmit={handleOnSubmit} className="flex flex-col">
+                            <div className="my-3 flex justify-center">
+                                <input type="text" onChange={(e)=>{setName(e.target.value)}} placeholder="name" className="py-2 px-2 w-1/2 border border-gray-300 rounded-lg"/>
+                            </div>
                             <div className="my-3 flex justify-center">
                                 <input type="email" onChange={(e)=>{setEmail(e.target.value)}} placeholder="Email" className="py-2 px-2 w-1/2 border border-gray-300 rounded-lg"/>
                             </div>

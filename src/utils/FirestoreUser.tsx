@@ -8,6 +8,7 @@ export async function checkDatafromFirestore(uuid:string){
         if(docSnap.exists()){
             //check account activation
             userData={
+                name:docSnap.data().name,
                 uid: uuid,
                 enabled: docSnap.data().enabled,
                 role: docSnap.data().role
@@ -16,25 +17,13 @@ export async function checkDatafromFirestore(uuid:string){
     return userData
 }
 
-export async function pushnewDatatoFirestore(uuid:string, status:boolean, role:string){
+export async function pushnewDatatoFirestore(uuid:string, status:boolean, role:string, name:string){
     if(status){
-        console.log("Pushing data");
         await setDoc(doc(db, 'users', uuid), {
+            name: name,
             role: role,
             enabled: false,
-            });
+        });
     }
 }
 
-export function checkValidity(user:any){
-    let userData : UserData|null = null;
-    if(user){
-        checkDatafromFirestore(user.uid).then((data:UserData| null)=>{
-            if(data){
-                userData = data;
-            }
-        })
-    }
-
-    return userData
-}
