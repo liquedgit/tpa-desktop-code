@@ -4,6 +4,7 @@ import { UserData } from "../Type"
 import { onAuthStateChanged } from "firebase/auth"
 import { checkDatafromFirestore } from "../utils/FirestoreUser"
 import HeaderComponent from "../components/HeaderComponent"
+import NavbarComponent from "../components/NavbarComponent"
 
 
 export default function HomeView(){
@@ -23,6 +24,7 @@ export default function HomeView(){
     return(
         <>
             <HeaderComponent user={user}/>
+            <NavbarComponent/>
         </>
     )
 }

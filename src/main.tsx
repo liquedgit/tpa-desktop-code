@@ -30,9 +30,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     {/* <App /> */}
-    <div className='h-[100vh] w-[100vw]'>
       <RouterProvider router={router}/>
-    </div>
   </React.StrictMode>,
 )
 

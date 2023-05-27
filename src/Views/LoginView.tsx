@@ -43,7 +43,7 @@ export default function LoginView(){
 
     return(
         <>
-            <div className="bg-green-100 w-full h-full flex justify-center items-center">
+            <div className="bg-green-100 w-screen h-screen flex justify-center items-center">
                 <div className="bg-white py-6 w-1/4 border border-black rounded-lg">
                     <div className='w-full'>
                         <div className="flex justify-center">
