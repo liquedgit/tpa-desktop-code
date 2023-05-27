@@ -26,6 +26,9 @@ export default function LoginView(){
                             setErrorLogin(true);
                             setErrorMessage("Account is not activated. Please contact Administration Staff");
                         }else{
+                            const loggedinData = JSON.stringify(data);
+                            console.log(loggedinData);
+                            localStorage.setItem('loggedin', loggedinData);
                             navigate('/home');
                         }
                     }

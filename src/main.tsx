@@ -1,16 +1,11 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import{
-  createBrowserRouter,
-  RouterProvider
-} from 'react-router-dom'
-import LoginView from './Views/LoginView.tsx'
-import RegisterView from './Views/RegisterView.tsx'
-import HomeView from './Views/HomeView.tsx'
-
-
-
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import LoginView from "./Views/LoginView.tsx";
+import RegisterView from "./Views/RegisterView.tsx";
+import HomeView from "./Views/HomeView.tsx";
+import NewStaffView from "./Views/NewStaffView.tsx";
 
 const router = createBrowserRouter([
   {
@@ -19,18 +14,21 @@ const router = createBrowserRouter([
   },
   {
     path: "/register",
-    element: <RegisterView/>
+    element: <RegisterView />,
   },
   {
-    path:"/home",
-    element: <HomeView/>
-  }
+    path: "/home",
+    element: <HomeView />,
+  },
+  {
+    path: "/newstaff",
+    element: <NewStaffView />,
+  },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     {/* <App /> */}
-      <RouterProvider router={router}/>
-  </React.StrictMode>,
-)
-
+    <RouterProvider router={router} />
+  </React.StrictMode>
+);

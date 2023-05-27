@@ -1,30 +1,17 @@
-import { auth } from "../utils/Firebase"
-import { useState } from "react"
-import { UserData } from "../Type"
-import { onAuthStateChanged } from "firebase/auth"
-import { checkDatafromFirestore } from "../utils/FirestoreUser"
-import HeaderComponent from "../components/HeaderComponent"
-import NavbarComponent from "../components/NavbarComponent"
+import { UserData } from "../Type";
+import HeaderComponent from "../components/HeaderComponent";
+import NavbarComponent from "../components/NavbarComponent";
+import getLoggedin from "../utils/LocalStorage";
 
+export default function HomeView() {
+  const loggedin: UserData | null = getLoggedin();
 
-export default function HomeView(){
-    const [user, setUser] = useState<UserData | null>(null)
-
-    onAuthStateChanged(auth, (userCreds)=>{
-        if(userCreds){
-            checkDatafromFirestore(userCreds?.uid).then((cred)=>{
-                setUser(cred)
-            })
-        }
-        
-    })
-
-    
-
-    return(
-        <>
-            <HeaderComponent user={user}/>
-            <NavbarComponent/>
-        </>
-    )
+  return (
+    <>
+      <HeaderComponent user={loggedin} />
+      <div className="fixed w-full z-10">
+        <NavbarComponent user={loggedin} />
+      </div>
+    </>
+  );
 }
