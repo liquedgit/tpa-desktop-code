@@ -3,7 +3,7 @@ import { UserData } from "../Type";
 export default function getLoggedin(): UserData | null {
   let loggedin = localStorage.getItem("loggedin");
   if (loggedin) {
-    const obj = JSON.parse(loggedin);
+    const obj: UserData = JSON.parse(loggedin);
     if (obj) {
       const credsUser: UserData = {
         name: obj.name,
@@ -11,6 +11,7 @@ export default function getLoggedin(): UserData | null {
         role: obj.role,
         enabled: obj.enabled,
         email: obj.email,
+        shift: obj.shift,
       };
 
       // console.log(credsUser);

@@ -23,10 +23,11 @@ export default function RegisterView() {
         .then((userCreds) => {
           pushnewDatatoFirestore(
             userCreds.user.uid,
-            true,
+            false,
             role,
             name,
-            email
+            email,
+            null
           ).then(() => {
             navigate("/");
           });

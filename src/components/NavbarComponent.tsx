@@ -1,12 +1,23 @@
 import { useNavigate, Link } from "react-router-dom";
 import { auth } from "../utils/Firebase";
 import { UserData } from "../Type";
+import { useState } from "react";
 
 export default function NavbarComponent({ user }: { user: UserData | null }) {
   const navigate = useNavigate();
+  const [dropDown, setDropdown] = useState(false);
   let handleSignOut = () => {
     auth.signOut();
+    localStorage.setItem("loggedin", "");
     navigate("/");
+  };
+
+  let showDropDown = () => {
+    setDropdown(true);
+  };
+
+  let hideDropDown = () => {
+    setDropdown(false);
   };
 
   return (
@@ -22,13 +33,36 @@ export default function NavbarComponent({ user }: { user: UserData | null }) {
               <Link to={`/jobs`}>
                 <li className="mr-8">Jobs</li>
               </Link>
-              <Link to={`/room`}>
-                <li className="mr-8">Room List</li>
-              </Link>
               {user?.role === "adminstaff" && (
-                <Link to={`/newstaff`}>
-                  <li className="mr-8">Staff Management</li>
-                </Link>
+                <li
+                  className="mr-8"
+                  onMouseEnter={showDropDown}
+                  onMouseLeave={hideDropDown}
+                >
+                  <button>Staff Management</button>
+                  {dropDown && (
+                    <div className="absolute bg-white border border-gray-900 shadow-lg">
+                      <Link
+                        to={`/newstaff`}
+                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                      >
+                        Approve New Staff
+                      </Link>
+                      <Link
+                        to={`/deletestaff`}
+                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                      >
+                        Delete Staff
+                      </Link>
+                      <Link
+                        to={`/deletestaff`}
+                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                      >
+                        Change Staff Roles
+                      </Link>
+                    </div>
+                  )}
+                </li>
               )}
             </ol>
           </div>

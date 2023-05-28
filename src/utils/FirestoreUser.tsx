@@ -21,6 +21,7 @@ export async function checkDatafromFirestore(uuid: string) {
       enabled: docSnap.data().enabled,
       role: docSnap.data().role,
       email: docSnap.data().email,
+      shift: docSnap.data().shift,
     };
   }
   return userData;
@@ -31,16 +32,16 @@ export async function pushnewDatatoFirestore(
   status: boolean,
   role: string,
   name: string,
-  email: string
+  email: string,
+  shift: string | null
 ) {
-  if (status) {
-    await setDoc(doc(db, "users", uuid), {
-      name: name,
-      role: role,
-      enabled: false,
-      email: email,
-    });
-  }
+  await setDoc(doc(db, "users", uuid), {
+    name: name,
+    role: role,
+    enabled: status,
+    email: email,
+    shift: shift,
+  });
 }
 
 const usersRef = collection(db, "users");
@@ -56,6 +57,7 @@ export async function GET_ALL_UNVERIFIED_USER() {
     role: doc.data().role,
     enabled: doc.data().enabled,
     email: doc.data().email,
+    shift: doc.data().shift,
   }));
   return fixedData;
 }

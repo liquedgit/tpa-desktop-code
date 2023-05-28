@@ -4,4 +4,17 @@ export interface UserData {
   enabled: false;
   role: string;
   email: string;
+  shift: string | null;
+}
+
+export interface Bed {
+  bedid: string;
+  isAvailable: boolean;
+  usable: boolean;
+}
+
+export interface Room {
+  type: string;
+  roomid: string;
+  beds: Bed[];
 }

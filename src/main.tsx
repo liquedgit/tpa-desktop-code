@@ -6,6 +6,7 @@ import LoginView from "./Views/LoginView.tsx";
 import RegisterView from "./Views/RegisterView.tsx";
 import HomeView from "./Views/HomeView.tsx";
 import NewStaffView from "./Views/NewStaffView.tsx";
+import JobsView from "./Views/JobsView.tsx";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
   {
     path: "/newstaff",
     element: <NewStaffView />,
+  },
+  {
+    path: "/jobs",
+    element: <JobsView />,
   },
 ]);
 
