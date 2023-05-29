@@ -1,10 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import ButtonComponent from "../components/ButtonComponent";
-import { auth } from "../utils/Firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { UserData } from "../Type";
-import { checkDatafromFirestore } from "../utils/FirestoreUser";
+import { LoginController } from "../Controller/AuthController";
 
 export default function LoginView() {
   const [email, setEmail] = useState("");
@@ -14,37 +11,10 @@ export default function LoginView() {
 
   const navigate = useNavigate();
 
-  let handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (email.length != 0 && password.length != 0) {
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCreds) => {
-          checkDatafromFirestore(userCreds.user.uid).then(
-            (data: UserData | null) => {
-              if (data) {
-                if (data?.enabled === false) {
-                  setErrorLogin(true);
-                  setErrorMessage(
-                    "Account is not activated. Please contact Administration Staff"
-                  );
-                } else {
-                  const loggedinData = JSON.stringify(data);
-                  console.log(loggedinData);
-                  localStorage.setItem("loggedin", loggedinData);
-                  navigate("/home");
-                }
-              }
-            }
-          );
-        })
-        .catch((error) => {
-          console.log(error);
-          setErrorMessage("Wrong Email or Password");
-          setErrorLogin(true);
-        });
-    } else {
-      setErrorMessage("Please fill all the fields");
-      setErrorLogin(true);
+  let handleOnLogin = async (e: any) => {
+    await LoginController(e, email, password, setErrorLogin, setErrorMessage);
+    if (!errorLogin) {
+      navigate("/home");
     }
   };
 
@@ -56,7 +26,7 @@ export default function LoginView() {
             <div className="flex justify-center">
               <h1 className="font-bold text-2xl">LOGIN</h1>
             </div>
-            <form onSubmit={handleOnSubmit} className="flex flex-col">
+            <form onSubmit={(e) => handleOnLogin(e)} className="flex flex-col">
               <div className="my-3 mt-4 flex justify-center">
                 <input
                   type="email"

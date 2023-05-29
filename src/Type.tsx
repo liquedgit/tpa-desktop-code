@@ -18,3 +18,11 @@ export interface Room {
   roomid: string;
   beds: Bed[];
 }
+
+export interface LoginCreds {
+  email: string;
+  password: string;
+  confirmPass: string;
+  role: string;
+  name: string;
+}

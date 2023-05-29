@@ -1,9 +1,9 @@
 import { useState } from "react";
-import {
-  pushNewBedsRoomtoFirestore,
-  pushnewRoomtoFirestore,
-} from "../utils/FirebaseRoom";
 import { Room } from "../Type";
+import {
+  InsertNewBedController,
+  InsertRoomController,
+} from "../Controller/RoomController";
 
 export function ModalComponent({
   setShowModal,
@@ -18,15 +18,15 @@ export function ModalComponent({
 }) {
   const [roomNumber, setRoomNumber] = useState("");
   const [roomType, setRoomType] = useState("Sharing");
-  const handleOnInsert = () => {
-    const regex = /^[A-Z][0-9]\d{3}$/;
-    if (regex.test(roomNumber)) {
-      pushnewRoomtoFirestore(roomNumber, roomType);
-      setRerender(!rerender);
-      setShowModal(false);
-    } else {
-      alert("You inputted wrong room number format");
-    }
+
+  const handleOnInsert = async () => {
+    await InsertRoomController(
+      roomNumber,
+      roomType,
+      setRerender,
+      rerender,
+      setShowModal
+    );
   };
 
   return (
@@ -98,96 +98,13 @@ export function ModalAddBeds({
   const [targetRoom, setTargetRoom] = useState("");
 
   let addnewBed = async () => {
-    if (obj) {
-      let found = false;
-
-      for (const obj2 of obj) {
-        if (obj2.roomid === targetRoom) {
-          if (obj2.type === "Sharing") {
-            if (obj2.beds.length < 6) {
-              await pushNewBedsRoomtoFirestore(targetRoom);
-              setShowModal(false);
-              setRerender(!rerender);
-              found = true;
-              break;
-            }
-          } else if (
-            obj2.type === "Single" ||
-            obj2.type === "VIP" ||
-            obj2.type === "Royale"
-          ) {
-            if (obj2.beds.length < 1) {
-              await pushNewBedsRoomtoFirestore(targetRoom);
-              setShowModal(false);
-              setRerender(!rerender);
-              found = true;
-              break;
-            }
-          } else if (obj2.type === "Emergency") {
-            if (obj2.beds.length < 12) {
-              await pushNewBedsRoomtoFirestore(targetRoom);
-              setShowModal(false);
-              setRerender(!rerender);
-              found = true;
-              break;
-            }
-          }
-        }
-      }
-
-      if (!found) {
-        alert("Room is not found / Room is on its limit");
-      }
-    }
-  };
-
-  //   let addnewBed = () => {
-  //     if (obj) {
-  //       let found = false;
-  //       obj.forEach(async (obj2) => {
-  //         console.log(obj2.roomid === targetRoom);
-  //         // console.log(targetRoom);
-  //         if (!found) {
-  //           if (obj2.roomid === targetRoom) {
-  //             //   console.log("asas");
-  //             if (obj2.type === "Sharing") {
-  //               if (obj2.beds.length < 6) {
-  //                 await pushNewBedsRoomtoFirestore(targetRoom);
-  //                 setModalType(false);
-  //                 setRerender(true);
-  //                 found = true;
-  //               }
-  //             } else if (
-  //               obj2.type === "Single" ||
-  //               obj2.type === "VIP" ||
-  //               obj2.type === "Royale"
-  //             ) {
-  //               if (obj2.beds.length < 1) {
-  //                 await pushNewBedsRoomtoFirestore(targetRoom);
-  //                 setModalType(false);
-  //                 setRerender(true);
-  //                 found = true;
-  //               }
-  //             } else if (obj2.type === "Emergency") {
-  //               if (obj2.beds.length < 12) {
-  //                 await pushNewBedsRoomtoFirestore(targetRoom);
-  //                 setModalType(false);
-  //                 setRerender(true);
-  //                 found = true;
-  //               }
-  //             }
-  //           }
-  //         }
-  //       });
-  //       if (found) {
-  //         alert("Room is not found / Room is on its limit");
-  //       }
-  //     }
-  //   };
-
-  let handleClose = () => {
-    setModalType(0);
-    setShowModal(false);
+    await InsertNewBedController(
+      obj,
+      setShowModal,
+      setRerender,
+      rerender,
+      targetRoom
+    );
   };
 
   return (
@@ -209,7 +126,10 @@ export function ModalAddBeds({
           <div className="flex justify-end mt-4">
             <button
               className="bg-red-500 hover:bg-red-600 mr-4 text-white px-4 py-2 rounded"
-              onClick={handleClose}
+              onClick={() => {
+                setModalType(0);
+                setShowModal(false);
+              }}
             >
               Close
             </button>

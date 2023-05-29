@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import "toastr/build/toastr.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginView from "./Views/LoginView.tsx";
 import RegisterView from "./Views/RegisterView.tsx";

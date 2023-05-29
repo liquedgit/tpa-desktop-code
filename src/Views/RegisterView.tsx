@@ -1,9 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import ButtonComponent from "../components/ButtonComponent";
-import { auth } from "../utils/Firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { pushnewDatatoFirestore } from "../utils/FirestoreUser";
+import { LoginCreds } from "../Type";
+import { RegisterController } from "../Controller/AuthController";
 
 export default function RegisterView() {
   const [name, setName] = useState("");
@@ -13,36 +12,19 @@ export default function RegisterView() {
   const [role, setRole] = useState("Doctor");
   const [errorLogin, setErrorLogin] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const navigate = useNavigate();
 
-  let handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (email.length != 0 && password === confPassword) {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCreds) => {
-          pushnewDatatoFirestore(
-            userCreds.user.uid,
-            false,
-            role,
-            name,
-            email,
-            null
-          ).then(() => {
-            navigate("/");
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-          setErrorLogin(true);
-          setErrorMessage("Register Failed");
-        });
-    } else if (password !== confPassword) {
-      setErrorLogin(true);
-      setErrorMessage("Password doesn't match");
-    } else {
-      setErrorLogin(true);
-      setErrorMessage("Please fill in the fields");
+  let handleOnRegister = async (e: any) => {
+    const creds: LoginCreds = {
+      confirmPass: confPassword,
+      email: email,
+      name: name,
+      password: password,
+      role: role,
+    };
+    await RegisterController(e, setErrorLogin, setErrorMessage, creds);
+    if (!errorLogin) {
+      navigate("/");
     }
   };
 
@@ -54,7 +36,12 @@ export default function RegisterView() {
             <div className="flex justify-center">
               <h1 className="font-bold text-2xl">Register</h1>
             </div>
-            <form onSubmit={handleOnSubmit} className="flex flex-col">
+            <form
+              onSubmit={(e) => {
+                handleOnRegister(e);
+              }}
+              className="flex flex-col"
+            >
               <div className="my-3 flex justify-center">
                 <input
                   type="text"

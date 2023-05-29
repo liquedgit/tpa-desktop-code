@@ -1,63 +1,52 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Room, UserData } from "../Type";
-import { Card } from "../components/CardComponent";
-import HeaderComponent from "../components/HeaderComponent";
-import NavbarComponent from "../components/NavbarComponent";
-import { GetAllRoomfromFirestore } from "../utils/FirebaseRoom";
+import { RoomCard } from "../components/CardComponent";
 import getLoggedin from "../utils/LocalStorage";
 import { ModalAddBeds, ModalComponent } from "../components/ModalComponent";
+import { PageLayout } from "../components/PageLayout";
+import { GetRoomController } from "../Controller/RoomController";
 
 export default function HomeView() {
   const loggedin: UserData | null = getLoggedin();
   const [obj, setObj] = useState<Room[] | null>(null);
-
+  const [query, setQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [rerender, setRerender] = useState(false);
   const [modalType, setModalType] = useState(0);
-  const [isFilter, setIsFilter] = useState(false);
-
-  const HomeContext = createContext(null);
+  const [nFetch, setnFetch] = useState(false);
 
   useEffect(() => {
-    // console.log("Rerender");
-    if (!isFilter) {
-      GetAllRoomfromFirestore().then((room: Room[]) => setObj(room));
-    } else {
-      setIsFilter(false);
-    }
-    console.log(obj);
+    GetRoomController(setObj, nFetch, setnFetch, query, obj);
   }, [rerender]);
-
-  let handleAddnewRoom = () => {
-    setShowModal(true);
-    setModalType(1);
-  };
-
-  let handleAddnewBed = () => {
-    setShowModal(true);
-    setModalType(2);
-  };
 
   let filterRoom = () => {
     if (obj) {
       obj.reverse();
       setRerender(!rerender);
-      setIsFilter(true);
     }
   };
 
   return (
     <>
       <div>
-        <HeaderComponent user={loggedin} />
-        <NavbarComponent user={loggedin} />
+        <PageLayout user={loggedin} />
         <div>
           <div className="my-10">
             <h1 className="text-center text-2xl font-bold">Room List</h1>
             <div className="flex">
-              <div className="ml-14">
+              <div className="ml-14 flex">
+                <input
+                  type="text"
+                  placeholder="Search room"
+                  className="border border-black rounded-md p-2"
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    setnFetch(true);
+                    setRerender(!rerender);
+                  }}
+                />
                 <button
-                  className="border border-black rounded p-2 flex hover:bg-green-200 mr-4"
+                  className="border border-black rounded p-2 flex hover:bg-green-200 mx-6"
                   onClick={filterRoom}
                 >
                   Filter
@@ -67,7 +56,10 @@ export default function HomeView() {
                 <div className="ml-auto flex mr-14 ">
                   <button
                     className="border border-black rounded p-2 flex hover:bg-green-200 mr-4"
-                    onClick={handleAddnewBed}
+                    onClick={() => {
+                      setShowModal(true);
+                      setModalType(2);
+                    }}
                   >
                     Add new bed
                   </button>
@@ -78,7 +70,10 @@ export default function HomeView() {
                     Delete bed
                   </button>
                   <button
-                    onClick={handleAddnewRoom}
+                    onClick={() => {
+                      setShowModal(true);
+                      setModalType(1);
+                    }}
                     className="border border-black rounded p-2 flex hover:bg-green-200"
                   >
                     Add new room
@@ -90,7 +85,7 @@ export default function HomeView() {
           <div className="mx-14 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
             {obj &&
               obj.map((room: Room) => {
-                return <Card obj={room} />;
+                return <RoomCard obj={room} />;
               })}
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { Bed, Room } from "../Type";
 
-export function Card({ obj }: { obj: Room }) {
+export function RoomCard({ obj }: { obj: Room }) {
   const obj2: Bed[] = obj.beds;
 
   return (
@@ -14,7 +14,7 @@ export function Card({ obj }: { obj: Room }) {
           <div className="grid grid-cols-2 gap-3">
             {obj2 &&
               obj2.map((bed: Bed, index) => {
-                return <RoomCards obj3={bed} index={index} />;
+                return <BedCards obj3={bed} index={index} />;
               })}
           </div>
         </div>
@@ -23,7 +23,7 @@ export function Card({ obj }: { obj: Room }) {
   );
 }
 
-export function RoomCards({ obj3, index }: { obj3: Bed; index: number }) {
+export function BedCards({ obj3, index }: { obj3: Bed; index: number }) {
   return (
     <>
       <div
