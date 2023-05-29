@@ -17,7 +17,7 @@ export function ModalComponent({
   setModalType: Function;
 }) {
   const [roomNumber, setRoomNumber] = useState("");
-  const [roomType, setRoomType] = useState("");
+  const [roomType, setRoomType] = useState("Sharing");
   const handleOnInsert = () => {
     const regex = /^[A-Z][0-9]\d{3}$/;
     if (regex.test(roomNumber)) {
