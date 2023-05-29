@@ -1,4 +1,4 @@
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 import { Bed, Room } from "../Type";
 
@@ -33,4 +33,20 @@ export async function GetAllRoomfromFirestore(): Promise<Room[]> {
   }
   //   console.log(roomData);
   return roomData;
+}
+
+export async function pushnewRoomtoFirestore(roomid: string, type: string) {
+  const parentRef = doc(db, "rooms", roomid);
+  await setDoc(parentRef, {
+    room_type: type,
+  });
+}
+
+export async function pushNewBedsRoomtoFirestore(roomid: string) {
+  const parentRef = doc(db, "rooms", roomid);
+  const bedsRef = collection(parentRef, "beds");
+  await setDoc(doc(bedsRef), {
+    isAvailable: true,
+    usable: true,
+  });
 }

@@ -2,6 +2,7 @@ import { Bed, Room } from "../Type";
 
 export function Card({ obj }: { obj: Room }) {
   const obj2: Bed[] = obj.beds;
+
   return (
     <>
       <div key={obj.roomid} className="bg-gray-300 rounded shadow-lg p-2">
