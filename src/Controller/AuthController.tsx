@@ -71,7 +71,7 @@ export async function LoginController(
                 );
               } else {
                 const loggedinData = JSON.stringify(data);
-                console.log(loggedinData);
+                // console.log(loggedinData);
                 localStorage.setItem("loggedin", loggedinData);
               }
             }

@@ -51,7 +51,53 @@ export function ModalBackdrop({
           />
         )}
         {modalType === 3 && <ModalAssignPatient />}
+        {modalType === 5 && <ModalDeleteBed />}
         {modalType === 6 && <ModalViewPatientDetail />}
+      </div>
+    </>
+  );
+}
+
+export function ModalDeleteBed() {
+  const { setModalType, setShowModal, targetBed } = useContext(MyContext)!;
+  const [RoomId, setRoomId] = useState("");
+  const [bednum, setBedNum] = useState(0);
+  return (
+    <>
+      <div className="modal-content bg-white rounded-lg p-6 relative z-10">
+        <h1 className="text-xl font-bold mb-4">Delete Bed</h1>
+        <div className="flex flex-col my-6 font-bold">
+          <input
+            type="text"
+            className="p-2 border border-black rounded my-2"
+            placeholder="Room Id"
+            onChange={(e) => {
+              setRoomId(e.target.value);
+            }}
+          />
+          <input
+            type="number"
+            className="p-2 border border-black rounded my-2"
+            placeholder="Bed Id"
+            onChange={(e) => {
+              setBedNum(parseInt(e.target.value));
+            }}
+          />
+        </div>
+        <div className="flex justify-end mt-4">
+          <button
+            onClick={() => {
+              setModalType(0);
+              setShowModal(false);
+            }}
+            className="bg-red-500 hover:bg-red-600  text-white px-4 py-2 rounded mr-4"
+          >
+            Close
+          </button>
+          <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+            Add Patient
+          </button>
+        </div>
       </div>
     </>
   );
