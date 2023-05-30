@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
-import { Room, UserData } from "../Type";
+import { createContext, useEffect, useState } from "react";
+import { Bed, HomeContext, Room, UserData } from "../Type";
 import { RoomCard } from "../components/CardComponent";
 import getLoggedin from "../utils/LocalStorage";
-import { ModalAddBeds, ModalComponent } from "../components/ModalComponent";
+import { ModalBackdrop } from "../components/ModalComponent";
 import { PageLayout } from "../components/PageLayout";
 import { GetRoomController } from "../Controller/RoomController";
+
+export const MyContext = createContext<HomeContext | undefined>(undefined);
 
 export default function HomeView() {
   const loggedin: UserData | null = getLoggedin();
@@ -14,6 +16,28 @@ export default function HomeView() {
   const [rerender, setRerender] = useState(false);
   const [modalType, setModalType] = useState(0);
   const [nFetch, setnFetch] = useState(false);
+  const [targetRoom, setTargetRoom] = useState<Room | null>(null);
+  const [targetBed, setTargetBed] = useState<Bed | null>(null);
+
+  const contextValue: HomeContext = {
+    loggedin,
+    obj,
+    query,
+    showModal,
+    rerender,
+    modalType,
+    nFetch,
+    targetRoom,
+    targetBed,
+    setObj,
+    setQuery,
+    setShowModal,
+    setRerender,
+    setModalType,
+    setnFetch,
+    setTargetRoom,
+    setTargetBed,
+  };
 
   useEffect(() => {
     GetRoomController(setObj, nFetch, setnFetch, query, obj);
@@ -22,6 +46,7 @@ export default function HomeView() {
   let filterRoom = () => {
     if (obj) {
       obj.reverse();
+      setnFetch(true);
       setRerender(!rerender);
     }
   };
@@ -82,31 +107,28 @@ export default function HomeView() {
               )}
             </div>
           </div>
-          <div className="mx-14 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
-            {obj &&
-              obj.map((room: Room) => {
-                return <RoomCard obj={room} />;
-              })}
-          </div>
+          <MyContext.Provider value={contextValue}>
+            <div className="mx-14 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+              {obj &&
+                obj.map((room: Room) => {
+                  return <RoomCard myroom={room} />;
+                })}
+            </div>
+          </MyContext.Provider>
         </div>
       </div>
-      {showModal && modalType === 1 && (
-        <ModalComponent
-          setModalType={setModalType}
-          setRerender={setRerender}
-          setShowModal={setShowModal}
-          rerender={rerender}
-        />
-      )}
-      {showModal && modalType === 2 && (
-        <ModalAddBeds
-          rerender={rerender}
-          obj={obj}
-          setShowModal={setShowModal}
-          setModalType={setModalType}
-          setRerender={setRerender}
-        />
-      )}
+      <MyContext.Provider value={contextValue}>
+        {showModal && (
+          <ModalBackdrop
+            setShowModal={setShowModal}
+            setModalType={setModalType}
+            setRerender={setRerender}
+            modalType={modalType}
+            obj={obj}
+            rerender={rerender}
+          />
+        )}
+      </MyContext.Provider>
     </>
   );
 }

@@ -1,5 +1,6 @@
-import { Room } from "../Type";
+import { Bed, Doctor, PatientData, Room } from "../Type";
 import {
+  AssignPatientRoomFirestore,
   GetAllRoomfromFirestore,
   pushNewBedsRoomtoFirestore,
   pushnewRoomtoFirestore,
@@ -113,5 +114,46 @@ export async function GetRoomController(
       setObj(rooms);
       FetchedRoomData = rooms;
     });
+  }
+}
+
+export async function AssignPatient(
+  patientName: string,
+  gender: string,
+  age: number,
+  sickness: string,
+  initDoctor: string,
+  targetRoom: Room | null,
+  targetBed: Bed | null
+) {
+  if (patientName.length == 0) {
+    toastr.error("Please fill the patient name fields !", "Error");
+  } else if (age <= 0) {
+    toastr.error("Age cannot be less or equals than 0", "Error");
+  } else if (initDoctor.length == 0) {
+    toastr.error("Please fill the doctor name !", "Error");
+  } else if (sickness.length < 3) {
+    toastr.error("Sickness cannot be less than 3", "Error");
+  } else {
+    const temp: Doctor[] = [];
+    const doctor: Doctor = {
+      DoctorName: initDoctor,
+    };
+    temp.push(doctor);
+    const pData: PatientData = {
+      PatientName: patientName,
+      gender: gender,
+      age: age,
+      sickness: sickness,
+      Doctors: temp,
+    };
+    if (targetBed && targetRoom) {
+      await AssignPatientRoomFirestore(
+        targetBed.bedid,
+        targetRoom.roomid,
+        pData
+      );
+      toastr.success(`Patient assigned to room`);
+    }
   }
 }

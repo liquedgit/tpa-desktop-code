@@ -1,6 +1,6 @@
 import { collection, doc, getDocs, query, setDoc } from "firebase/firestore";
 import { db } from "./Firebase";
-import { Bed, Room } from "../Type";
+import { Bed, PatientData, Room } from "../Type";
 
 const roomRef = collection(db, "rooms");
 const Q_GET_ALL_ROOM = query(roomRef);
@@ -22,6 +22,7 @@ export async function GetAllRoomfromFirestore(): Promise<Room[]> {
       bedid: bed.id,
       usable: bed.data().usable,
       isAvailable: bed.data().isAvailable,
+      patient: bed.data().patient,
     }));
 
     const roomWithBeds: Room = {
@@ -31,7 +32,7 @@ export async function GetAllRoomfromFirestore(): Promise<Room[]> {
 
     roomData.push(roomWithBeds);
   }
-  //   console.log(roomData);
+  // console.log(roomData);
   return roomData;
 }
 
@@ -48,5 +49,19 @@ export async function pushNewBedsRoomtoFirestore(roomid: string) {
   await setDoc(doc(bedsRef), {
     isAvailable: true,
     usable: true,
+  });
+}
+
+export async function AssignPatientRoomFirestore(
+  bedid: string,
+  roomid: string,
+  newPatient: PatientData
+) {
+  const parentRef = doc(db, "rooms", roomid);
+  const bedsRef = doc(collection(parentRef, "beds"), bedid);
+  await setDoc(bedsRef, {
+    isAvailable: false,
+    usable: true,
+    patient: newPatient,
   });
 }
