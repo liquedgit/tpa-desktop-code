@@ -1,6 +1,7 @@
 import { Bed, Doctor, PatientData, Room } from "../Type";
 import {
   AssignPatientRoomFirestore,
+  DeleteBedFromFireStore,
   GetAllRoomfromFirestore,
   pushNewBedsRoomtoFirestore,
   pushnewRoomtoFirestore,
@@ -114,6 +115,45 @@ export async function GetRoomController(
       setObj(rooms);
       FetchedRoomData = rooms;
     });
+  }
+}
+
+export async function DeleteBed(
+  obj: Room[] | null,
+  targetRoomid: string,
+  targetBed: number,
+  setNFetch: Function,
+  setRerender: Function,
+  rerender: boolean,
+  setObj: Function,
+  setShowModal: Function,
+  setModalType: Function
+) {
+  if (obj) {
+    for (const obj2 of obj) {
+      if (obj2.roomid === targetRoomid) {
+        if (obj2.beds[targetBed - 1] && obj2.beds[targetBed - 1].isAvailable) {
+          await DeleteBedFromFireStore(
+            obj2.beds[targetBed - 1].bedid,
+            obj2.roomid
+          );
+          const objDelete = obj2.beds.indexOf(obj2.beds[targetBed - 1]);
+          const returnedObj = obj2.beds.splice(objDelete, 1);
+          setObj(returnedObj);
+          toastr.success("Deleted Room", "Success");
+          setModalType(0);
+          setShowModal(false);
+          setRerender(!rerender);
+          setNFetch(true);
+        } else {
+          toastr.error(
+            "There is no such bed / Bed is currently being used",
+            "Error"
+          );
+        }
+        break;
+      }
+    }
   }
 }
 

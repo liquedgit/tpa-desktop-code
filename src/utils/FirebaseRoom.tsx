@@ -1,4 +1,11 @@
-import { collection, doc, getDocs, query, setDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "./Firebase";
 import { Bed, PatientData, Room } from "../Type";
 
@@ -64,4 +71,11 @@ export async function AssignPatientRoomFirestore(
     usable: true,
     patient: newPatient,
   });
+}
+
+export async function DeleteBedFromFireStore(bedid: string, roomid: string) {
+  const parentRef = doc(db, "rooms", roomid);
+  const bedRef = doc(parentRef, "beds", bedid);
+
+  await deleteDoc(bedRef);
 }

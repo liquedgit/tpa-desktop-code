@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Doctor, Room } from "../Type";
 import {
   AssignPatient,
+  DeleteBed,
   InsertNewBedController,
   InsertRoomController,
 } from "../Controller/RoomController";
@@ -59,7 +60,15 @@ export function ModalBackdrop({
 }
 
 export function ModalDeleteBed() {
-  const { setModalType, setShowModal, targetBed } = useContext(MyContext)!;
+  const {
+    setModalType,
+    setShowModal,
+    obj,
+    setObj,
+    rerender,
+    setRerender,
+    setnFetch,
+  } = useContext(MyContext)!;
   const [RoomId, setRoomId] = useState("");
   const [bednum, setBedNum] = useState(0);
   return (
@@ -94,8 +103,23 @@ export function ModalDeleteBed() {
           >
             Close
           </button>
-          <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
-            Add Patient
+          <button
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+            onClick={async () => {
+              await DeleteBed(
+                obj,
+                RoomId,
+                bednum,
+                setnFetch,
+                setRerender,
+                rerender,
+                setObj,
+                setShowModal,
+                setModalType
+              );
+            }}
+          >
+            Delete Bed
           </button>
         </div>
       </div>
