@@ -51,9 +51,54 @@ export function ModalBackdrop({
             setRerender={setRerender}
           />
         )}
-        {modalType === 3 && <ModalAssignPatient />}
+        {modalType === 3 && <ModalAssignPatient />}\
+        {modalType === 4 && <ModalMoveBed />}
         {modalType === 5 && <ModalDeleteBed />}
         {modalType === 6 && <ModalViewPatientDetail />}
+      </div>
+    </>
+  );
+}
+
+export function ModalMoveBed() {
+  const { setShowModal, setModalType } = useContext(MyContext)!;
+  return (
+    <>
+      <div className="modal-content bg-white rounded-lg p-6 relative z-10">
+        <h1 className="text-xl text-center font-bold mb-4">Move Bed</h1>
+        <div className="flex flex-col my-6">
+          <div className="flex">
+            <input
+              type="text"
+              placeholder="Room ID"
+              className="border border-black rounded p-2 mr-4"
+            />
+            <input
+              type="text"
+              placeholder="Bed Number"
+              className="border border-black rounded p-2"
+            />
+          </div>
+          <input
+            type="text"
+            placeholder="New Room Id"
+            className="border border-black rounded mt-4 p-2"
+          />
+        </div>
+        <div className="flex justify-end mt-4">
+          <button
+            onClick={() => {
+              setShowModal(false);
+              setModalType(0);
+            }}
+            className="bg-red-500 hover:bg-red-600 mr-4 text-white px-4 py-2 rounded"
+          >
+            Close
+          </button>
+          <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+            Move Bed
+          </button>
+        </div>
       </div>
     </>
   );

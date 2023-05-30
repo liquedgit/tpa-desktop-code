@@ -88,7 +88,13 @@ export default function HomeView() {
                   >
                     Add new bed
                   </button>
-                  <button className="border border-black rounded p-2 flex hover:bg-green-200 mr-4">
+                  <button
+                    className="border border-black rounded p-2 flex hover:bg-green-200 mr-4"
+                    onClick={() => {
+                      setModalType(4);
+                      setShowModal(true);
+                    }}
+                  >
                     Move Bed
                   </button>
                   <button
