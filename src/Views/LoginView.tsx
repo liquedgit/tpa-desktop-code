@@ -1,22 +1,27 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonComponent from "../components/ButtonComponent";
 import { LoginController } from "../Controller/AuthController";
 
 export default function LoginView() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorLogin, setErrorLogin] = useState(false);
+  const [errorLogin, setErrorLogin] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
   let handleOnLogin = async (e: any) => {
+    e.preventDefault();
     await LoginController(e, email, password, setErrorLogin, setErrorMessage);
+    console.log(errorLogin);
+  };
+
+  useEffect(() => {
     if (!errorLogin) {
       navigate("/home");
     }
-  };
+  }, [errorLogin]);
 
   return (
     <>

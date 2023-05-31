@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonComponent from "../components/ButtonComponent";
 import { LoginCreds } from "../Type";
 import { RegisterController } from "../Controller/AuthController";
@@ -10,11 +10,12 @@ export default function RegisterView() {
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
   const [role, setRole] = useState("Doctor");
-  const [errorLogin, setErrorLogin] = useState(false);
+  const [errorLogin, setErrorLogin] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   let handleOnRegister = async (e: any) => {
+    e.preventDefault();
     const creds: LoginCreds = {
       confirmPass: confPassword,
       email: email,
@@ -22,11 +23,14 @@ export default function RegisterView() {
       password: password,
       role: role,
     };
-    await RegisterController(e, setErrorLogin, setErrorMessage, creds);
+    RegisterController(e, setErrorLogin, setErrorMessage, creds);
+  };
+
+  useEffect(() => {
     if (!errorLogin) {
       navigate("/");
     }
-  };
+  }, [errorLogin]);
 
   return (
     <>

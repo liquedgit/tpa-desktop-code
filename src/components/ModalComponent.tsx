@@ -62,15 +62,8 @@ export function ModalBackdrop({
 }
 
 export function ModalMoveBed() {
-  const {
-    setShowModal,
-    setModalType,
-    obj,
-    setRerender,
-    rerender,
-    setObj,
-    setnFetch,
-  } = useContext(MyContext)!;
+  const { setShowModal, setModalType, obj, setRerender, rerender, setnFetch } =
+    useContext(MyContext)!;
 
   const [roomid, setRoomid] = useState("");
   const [bedid, setbedId] = useState(0);

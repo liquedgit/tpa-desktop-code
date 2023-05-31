@@ -97,6 +97,6 @@ export async function MoveBedFromFireStore(
   await setDoc(bedPushRef, {
     isAvailable: newBedsPush.isAvailable,
     usable: newBedsPush.usable,
-    patient: newBedsPush.patient,
+    ...(newBedsPush.patient ? { patient: newBedsPush.patient } : {}),
   });
 }

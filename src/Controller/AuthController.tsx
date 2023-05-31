@@ -54,8 +54,8 @@ export async function LoginController(
   e: FormEvent<HTMLFormElement>,
   email: string,
   password: string,
-  setErrorLogin: Function,
-  setErrorMessage: Function
+  setErrorLogin: React.Dispatch<React.SetStateAction<boolean>>,
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>
 ) {
   e.preventDefault();
   if (email.length != 0 && password.length != 0) {
@@ -71,6 +71,7 @@ export async function LoginController(
                 );
               } else {
                 const loggedinData = JSON.stringify(data);
+                setErrorLogin(false);
                 // console.log(loggedinData);
                 localStorage.setItem("loggedin", loggedinData);
               }
@@ -84,6 +85,7 @@ export async function LoginController(
         setErrorLogin(true);
       });
   } else {
+    console.log("ASAS");
     setErrorMessage("Please fill all the fields");
     setErrorLogin(true);
   }
