@@ -79,3 +79,24 @@ export async function DeleteBedFromFireStore(bedid: string, roomid: string) {
 
   await deleteDoc(bedRef);
 }
+
+export async function MoveBedFromFireStore(
+  originRoom: string,
+  bedId: string,
+  targetroomid: string,
+  newBedsPush: Bed
+) {
+  const parentRef = doc(db, "rooms", originRoom);
+  const bedDelRef = doc(parentRef, "beds", bedId);
+
+  await deleteDoc(bedDelRef);
+
+  const parentPushRef = doc(db, "rooms", targetroomid);
+  const bedPushRef = doc(parentPushRef, "beds", bedId);
+
+  await setDoc(bedPushRef, {
+    isAvailable: newBedsPush.isAvailable,
+    usable: newBedsPush.usable,
+    patient: newBedsPush.patient,
+  });
+}

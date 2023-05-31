@@ -3,6 +3,7 @@ import {
   AssignPatientRoomFirestore,
   DeleteBedFromFireStore,
   GetAllRoomfromFirestore,
+  MoveBedFromFireStore,
   pushNewBedsRoomtoFirestore,
   pushnewRoomtoFirestore,
 } from "../utils/FirebaseRoom";
@@ -23,6 +24,55 @@ export async function InsertRoomController(
     toastr.success("Successfully Added new Room", "Success");
   } else {
     toastr.error("You inputted wrong room number", "Error");
+  }
+}
+
+export async function MoveBedController(
+  obj: Room[] | null,
+  setShowModal: Function,
+  setRerender: Function,
+  rerender: boolean,
+  roomid: string,
+  targetBed: number,
+  targetRoom: string,
+  setModalType: Function,
+  setnFetch: Function
+) {
+  if (obj) {
+    for (const obj2 of obj) {
+      if (obj2.roomid === roomid) {
+        if (obj2.beds[targetBed - 1].bedid) {
+          // push ke satu lagi
+          for (const room2 of obj) {
+            if (
+              room2.roomid === targetRoom &&
+              ((room2.type === "Sharing" && room2.beds.length < 6) ||
+                ((room2.type === "Royale" ||
+                  room2.type === "VIP" ||
+                  room2.type === "Single") &&
+                  room2.beds.length < 1) ||
+                (room2.type === "Emergency" && room2.beds.length < 12))
+            ) {
+              //can push
+              room2.beds.push(obj2.beds[targetBed - 1]);
+              const temp = obj2.beds[targetBed - 1];
+              const deletedObj = obj2.beds.indexOf(temp);
+              obj2.beds.splice(deletedObj, 1);
+
+              // await firestore
+              await MoveBedFromFireStore(roomid, temp.bedid, targetRoom, temp);
+              toastr.success("Succesfully Moved bed", "Success");
+              setModalType(0);
+              setShowModal(false);
+              setRerender(!rerender);
+              setnFetch(true);
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
   }
 }
 

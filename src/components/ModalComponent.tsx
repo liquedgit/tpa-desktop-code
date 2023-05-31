@@ -5,6 +5,7 @@ import {
   DeleteBed,
   InsertNewBedController,
   InsertRoomController,
+  MoveBedController,
 } from "../Controller/RoomController";
 import { MyContext } from "../Views/HomeView";
 
@@ -61,7 +62,20 @@ export function ModalBackdrop({
 }
 
 export function ModalMoveBed() {
-  const { setShowModal, setModalType } = useContext(MyContext)!;
+  const {
+    setShowModal,
+    setModalType,
+    obj,
+    setRerender,
+    rerender,
+    setObj,
+    setnFetch,
+  } = useContext(MyContext)!;
+
+  const [roomid, setRoomid] = useState("");
+  const [bedid, setbedId] = useState(0);
+  const [targetRoom, setTargetRoom] = useState("");
+
   return (
     <>
       <div className="modal-content bg-white rounded-lg p-6 relative z-10">
@@ -72,17 +86,26 @@ export function ModalMoveBed() {
               type="text"
               placeholder="Room ID"
               className="border border-black rounded p-2 mr-4"
+              onChange={(e) => {
+                setRoomid(e.target.value);
+              }}
             />
             <input
               type="text"
               placeholder="Bed Number"
               className="border border-black rounded p-2"
+              onChange={(e) => {
+                setbedId(parseInt(e.target.value));
+              }}
             />
           </div>
           <input
             type="text"
             placeholder="New Room Id"
             className="border border-black rounded mt-4 p-2"
+            onChange={(e) => {
+              setTargetRoom(e.target.value);
+            }}
           />
         </div>
         <div className="flex justify-end mt-4">
@@ -95,7 +118,22 @@ export function ModalMoveBed() {
           >
             Close
           </button>
-          <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+          <button
+            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+            onClick={async () => {
+              await MoveBedController(
+                obj,
+                setShowModal,
+                setRerender,
+                rerender,
+                roomid,
+                bedid,
+                targetRoom,
+                setModalType,
+                setnFetch
+              );
+            }}
+          >
             Move Bed
           </button>
         </div>
